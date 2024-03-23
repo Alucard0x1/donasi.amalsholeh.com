@@ -1,0 +1,30 @@
+function generate_wakaf_card_html($atts) {
+    $atts = shortcode_atts(array(
+        'id' => null,
+    ), $atts, 'wakaf_card');
+
+    $post_id = $atts['id'];
+    $post = get_post($post_id);
+
+    if ($post && $post->post_type === 'wakaf') {
+        $slug = basename(get_permalink($post_id));
+        $title = get_the_title($post_id);
+        $headline = $post->post_content;
+        $image = get_the_post_thumbnail_url($post_id);
+        $user = 'Yayasan Sahabat Muslim Charity';
+        $avatar = 'https://amalsholeh-s3.imgix.net/avatar/XRc9X8S2C4wMwHQIZvpOGYCLekdbTMmx8s3yKWD2.jpg?ar=1:1&w=80&fit=crop&auto=format,compress';
+
+        echo "<script>";
+        echo "console.log('Slug: $slug, Title: $title, Headline: $headline, Image: $image');";
+        echo "</script>";
+
+        $html = '<article class="as-program-card" data-slug="' . esc_attr($slug) . '" data-type="Donasi" data-title="' . esc_attr($title) . '" data-headline="' . esc_attr($headline) . '" data-image="' . esc_url($image) . '" data-user="' . esc_attr($user) . '" data-avatar="' . esc_url($avatar) . '"></article>';
+
+        $html .= '<script>document.addEventListener("DOMContentLoaded", function() { if (window.amalsholehWidget) { window.amalsholehWidget.init(); } });</script>';
+
+        return $html;
+    }
+
+    return '';
+}
+add_shortcode('wakaf_card', 'generate_wakaf_card_html');
